@@ -11,9 +11,9 @@ namespace ShelterMaker.Controllers
     public class ChecklistController : ControllerBase
     {
         private readonly ShelterDbContext _dbContext;
-        private readonly ILogger<AmenityController> _logger;
+        private readonly ILogger<ChecklistController> _logger;
 
-        public ChecklistController(ShelterDbContext dbContext, ILogger<AmenityController> logger)
+        public ChecklistController(ShelterDbContext dbContext, ILogger<ChecklistController> logger)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _logger = logger;

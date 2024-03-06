@@ -11,9 +11,9 @@ namespace ShelterMaker.Controllers
     public class ContactInfoController : ControllerBase
     {
         private readonly ShelterDbContext _dbContext;
-        private readonly ILogger<AmenityController> _logger;
+        private readonly ILogger<ContactInfoController> _logger;
 
-        public ContactInfoController(ShelterDbContext dbContext, ILogger<AmenityController> logger)
+        public ContactInfoController(ShelterDbContext dbContext, ILogger<ContactInfoController> logger)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _logger = logger;

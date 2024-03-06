@@ -10,9 +10,9 @@ namespace ShelterMaker.Controllers
     public class BedMaintenanceController : ControllerBase
     {
         private readonly ShelterDbContext _dbContext;
-        private readonly ILogger<AmenityController> _logger;
+        private readonly ILogger<BedMaintenanceController> _logger;
 
-        public BedMaintenanceController(ShelterDbContext dbContext, ILogger<AmenityController> logger)
+        public BedMaintenanceController(ShelterDbContext dbContext, ILogger<BedMaintenanceController> logger)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _logger = logger;

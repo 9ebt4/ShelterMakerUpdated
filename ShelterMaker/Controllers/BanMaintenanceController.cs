@@ -10,9 +10,9 @@ namespace ShelterMaker.Controllers
     public class BanMaintenanceController : ControllerBase
     {
         private readonly ShelterDbContext _dbContext;
-        private readonly ILogger<AmenityController> _logger;
+        private readonly ILogger<BanMaintenanceController> _logger;
 
-        public BanMaintenanceController(ShelterDbContext dbContext, ILogger<AmenityController> logger)
+        public BanMaintenanceController(ShelterDbContext dbContext, ILogger<BanMaintenanceController> logger)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _logger = logger;

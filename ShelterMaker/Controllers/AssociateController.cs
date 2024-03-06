@@ -11,9 +11,9 @@ namespace ShelterMaker.Controllers
     public class AssociateController : ControllerBase
     {
         private readonly ShelterDbContext _dbContext;
-        private readonly ILogger<AmenityController> _logger;
+        private readonly ILogger<AssociateController> _logger;
 
-        public AssociateController(ShelterDbContext dbContext, ILogger<AmenityController> logger)
+        public AssociateController(ShelterDbContext dbContext, ILogger<AssociateController> logger)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _logger = logger;

@@ -11,9 +11,9 @@ namespace ShelterMaker.Controllers
     public class CaseWorkerPatronController : ControllerBase
     {
         private readonly ShelterDbContext _dbContext;
-        private readonly ILogger<AmenityController> _logger;
+        private readonly ILogger<CaseWorkerPatronController> _logger;
 
-        public CaseWorkerPatronController(ShelterDbContext dbContext, ILogger<AmenityController> logger)
+        public CaseWorkerPatronController(ShelterDbContext dbContext, ILogger<CaseWorkerPatronController> logger)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _logger = logger;
