@@ -8,4 +8,10 @@
         public bool? InitialAgreement { get; set; }
     }
 
+    public class InitialCheckDto
+    {
+        public int Id { get; set; }
+        public bool complete { get; set; }
+    }
+
 }

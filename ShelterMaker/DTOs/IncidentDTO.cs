@@ -19,7 +19,7 @@
         public string ActionTaken { get; set; }
         public bool? EmergencyServices { get; set; }
         public AssociateDetailDto AssociateDetails { get; set; }
-        public List<PatronDetailDto> PatronDetails { get; set; } = new List<PatronDetailDto>();
+        public List<PatronNameDetailDto> PatronDetails { get; set; } = new List<PatronNameDetailDto>();
         public string IncidentCategory { get; set; }
     }
 
@@ -30,7 +30,7 @@
         public string LastName { get; set; }
     }
 
-    public class PatronDetailDto
+    public class PatronNameDetailDto
     {
         public int PatronId { get; set; }
         public string FirstName { get; set; }

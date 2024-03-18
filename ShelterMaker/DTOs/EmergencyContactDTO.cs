@@ -23,11 +23,7 @@
         public int? PatronId { get; set; }
     }
 
-    public class ContactInfoDto
-    {
-        public string Detail { get; set; }
-        public string Type { get; set; } // Type from ContactMaintenance (e.g., Phone, Email)
-    }
+    
 
     public class EmergencyContactSimpleUpdateDto
     { 

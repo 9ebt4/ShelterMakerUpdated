@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ShelterMaker.DTOs;
 using ShelterMaker.Models;
-using static ShelterMaker.DTOs.BanDTO;
 
 namespace ShelterMaker.Controllers
 {

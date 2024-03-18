@@ -2,8 +2,7 @@
 
 namespace ShelterMaker.DTOs
 {
-    public class CaseWorkerPatronDTO
-    {
+    
         public class CaseWorkerPatronCreateDto
         {
             [Required]
@@ -17,5 +16,14 @@ namespace ShelterMaker.DTOs
             public int? NewCaseWorkerId { get; set; }
             public int? NewPatronId { get; set; }
         }
+
+    public class CaseWorkerInfoDto
+    {
+        public int Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public List<ContactInfoDto> ContactDetails { get; set; } = new List<ContactInfoDto>();
+
     }
+
 }

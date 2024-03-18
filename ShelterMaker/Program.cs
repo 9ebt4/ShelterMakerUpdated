@@ -18,12 +18,6 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
 
-//Log.Logger = new LoggerConfiguration()
-//    .ReadFrom.Configuration(builder.Configuration)
-//    .WriteTo.Console()
-//    .WriteTo.File("logs/shelter.txt", rollingInterval: RollingInterval.Day)
-//    .CreateLogger();
-// Add services to the container.
 
 
 

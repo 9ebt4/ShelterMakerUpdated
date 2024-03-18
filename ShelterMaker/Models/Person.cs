@@ -27,6 +27,8 @@ public partial class Person
 
     public virtual ICollection<GoogleUser> GoogleUsers { get; set; } = new List<GoogleUser>();
 
+    public virtual ICollection<InfoRelease> InfoReleases { get; set; } = new List<InfoRelease>();
+
     public virtual ICollection<PatronInfoRelease> PatronInfoReleases { get; set; } = new List<PatronInfoRelease>();
 
     public virtual ICollection<Patron> Patrons { get; set; } = new List<Patron>();

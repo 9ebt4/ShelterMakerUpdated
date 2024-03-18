@@ -53,6 +53,8 @@ public partial class ShelterDbContext : DbContext
 
     public virtual DbSet<IncidentMaintenance> IncidentMaintenances { get; set; }
 
+    public virtual DbSet<InfoRelease> InfoReleases { get; set; }
+
     public virtual DbSet<Initial> Initials { get; set; }
 
     public virtual DbSet<Intake> Intakes { get; set; }
@@ -93,7 +95,7 @@ public partial class ShelterDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=.\\SQLExpress;Database=shelterDB;Trusted_Connection=True;Encrypt=False");
+        => optionsBuilder.UseSqlServer("Server=.\\SQLExpress;Database=ShelterDB;Trusted_Connection=True;Encrypt=False");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -302,11 +304,6 @@ public partial class ShelterDbContext : DbContext
                 .HasForeignKey(d => d.FacilityId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Checklist__facil__398D8EEE");
-
-            entity.HasMany(d => d.Items)
-        .WithOne()
-        .HasForeignKey(d => d.CheckListId)
-        .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<ContactInfo>(entity =>
@@ -373,12 +370,6 @@ public partial class ShelterDbContext : DbContext
             entity.HasOne(d => d.Relationship).WithMany(p => p.EmergencyContacts)
                 .HasForeignKey(d => d.RelationshipId)
                 .HasConstraintName("FK__Emergency__relat__2BFE89A6");
-
-            modelBuilder.Entity<EmergencyContact>()
-       .HasOne(ec => ec.Person)
-       .WithOne() 
-       .HasForeignKey<EmergencyContact>(ec => ec.PersonId)
-       .OnDelete(DeleteBehavior.Cascade); // This will cascade delete the person when an emergency contact is deleted
         });
 
         modelBuilder.Entity<Facility>(entity =>
@@ -465,6 +456,30 @@ public partial class ShelterDbContext : DbContext
             entity.Property(e => e.Category)
                 .HasMaxLength(255)
                 .HasColumnName("category");
+        });
+
+        modelBuilder.Entity<InfoRelease>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__InfoRele__3214EC2736EF31D2");
+
+            entity.ToTable("InfoRelease");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.PatronId).HasColumnName("PatronID");
+            entity.Property(e => e.PersonId).HasColumnName("PersonID");
+            entity.Property(e => e.RelationshipId).HasColumnName("RelationshipID");
+
+            entity.HasOne(d => d.Patron).WithMany(p => p.InfoReleases)
+                .HasForeignKey(d => d.PatronId)
+                .HasConstraintName("FK_InfoRelease_Patron");
+
+            entity.HasOne(d => d.Person).WithMany(p => p.InfoReleases)
+                .HasForeignKey(d => d.PersonId)
+                .HasConstraintName("FK_InfoRelease_Person");
+
+            entity.HasOne(d => d.Relationship).WithMany(p => p.InfoReleases)
+                .HasForeignKey(d => d.RelationshipId)
+                .HasConstraintName("FK_InfoRelease_Relationship");
         });
 
         modelBuilder.Entity<Initial>(entity =>
@@ -734,12 +749,6 @@ public partial class ShelterDbContext : DbContext
             entity.HasOne(d => d.Gender).WithMany(p => p.People)
                 .HasForeignKey(d => d.GenderId)
                 .HasConstraintName("FK__Person__genderID__4CA06362");
-
-            modelBuilder.Entity<Person>()
-        .HasMany(p => p.ContactInfos)
-        .WithOne()
-        .HasForeignKey(ci => ci.PersonId)
-        .OnDelete(DeleteBehavior.Cascade); // This will cascade delete contact infos when a person is deleted
         });
 
         modelBuilder.Entity<Relationship>(entity =>

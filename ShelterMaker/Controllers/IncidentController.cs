@@ -78,7 +78,7 @@ namespace ShelterMaker.Controllers
                         FirstName = i.Associate.GoogleUser.Person.FirstName, // Ensuring the navigation properties are correctly chained.
                         LastName = i.Associate.GoogleUser.Person.LastName
                     },
-                    PatronDetails = i.PatronIncidents.Select(pi => new PatronDetailDto
+                    PatronDetails = i.PatronIncidents.Select(pi => new PatronNameDetailDto
                     {
                         PatronId = pi.PatronId.Value, // Ensuring that PatronId is unwrapped safely.
                         FirstName = pi.Patron.Person.FirstName, // Assuming that each Patron has a Person. Null checks may be needed.
@@ -147,7 +147,7 @@ namespace ShelterMaker.Controllers
                         FirstName = i.Associate.GoogleUser.Person.FirstName, // Ensuring the navigation properties are correctly chained.
                         LastName = i.Associate.GoogleUser.Person.LastName
                     },
-                    PatronDetails = i.PatronIncidents.Select(pi => new PatronDetailDto
+                    PatronDetails = i.PatronIncidents.Select(pi => new PatronNameDetailDto
                     {
                         PatronId = pi.PatronId.Value, // Ensuring that PatronId is unwrapped safely.
                         FirstName = pi.Patron.Person.FirstName, // Assuming that each Patron has a Person. Null checks may be needed.

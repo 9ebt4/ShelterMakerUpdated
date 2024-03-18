@@ -31,6 +31,8 @@ public partial class Patron
 
     public virtual Facility? Facility { get; set; }
 
+    public virtual ICollection<InfoRelease> InfoReleases { get; set; } = new List<InfoRelease>();
+
     public virtual Intake? Intake { get; set; }
 
     public virtual ICollection<MedicalCondition> MedicalConditions { get; set; } = new List<MedicalCondition>();

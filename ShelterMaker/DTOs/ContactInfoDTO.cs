@@ -21,4 +21,11 @@
         public int? PersonId { get; set; } = null; // Nullable to allow for updates that don't include this field
         public int? FacilityId { get; set; } = null; // Same as above
     }
+
+    public class ContactInfoDto
+    {
+        public int Id { get; set; }
+        public string Detail { get; set; }
+        public string Type { get; set; } // Type from ContactMaintenance (e.g., Phone, Email)
+    }
 }

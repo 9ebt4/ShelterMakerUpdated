@@ -2,8 +2,7 @@
 
 namespace ShelterMaker.DTOs
 {
-    public class BanDTO
-    {
+    
         public class BanCreateDto
         {
             [Required]
@@ -28,5 +27,14 @@ namespace ShelterMaker.DTOs
             public bool? IsActive { get; set; }
             public int? BanMaintenanceId { get; set; }
         }
+    public class BanDetailDto
+    {
+        public int? Id { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public bool? IsActive { get; set; }
+        public int? IncidentReportID { get; set; }
+        public int? BanMaintenanceId { get; set; }
+        public string? Category { get; set; }
     }
 }

@@ -13,4 +13,9 @@ namespace ShelterMaker.DTOs
         [Required]
         public string AmenityType { get; set; } // 'bed' or 'mat'
     }
+    public class BedNameDTO
+    {
+        public int? Id { get; set; }
+        public string? Name { get; set; }
+    }
 }

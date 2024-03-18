@@ -11,5 +11,7 @@ public partial class Relationship
 
     public virtual ICollection<EmergencyContact> EmergencyContacts { get; set; } = new List<EmergencyContact>();
 
+    public virtual ICollection<InfoRelease> InfoReleases { get; set; } = new List<InfoRelease>();
+
     public virtual ICollection<PatronInfoRelease> PatronInfoReleases { get; set; } = new List<PatronInfoRelease>();
 }

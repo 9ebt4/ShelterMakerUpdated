@@ -11,9 +11,9 @@ namespace ShelterMaker.Controllers
     public class ItemController : ControllerBase
     {
         private readonly ShelterDbContext _dbContext;
-        private readonly ILogger<IntakeController> _logger;
+        private readonly ILogger<ItemController> _logger;
 
-        public ItemController(ShelterDbContext dbContext, ILogger<IntakeController> logger)
+        public ItemController(ShelterDbContext dbContext, ILogger<ItemController> logger)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _logger = logger;
