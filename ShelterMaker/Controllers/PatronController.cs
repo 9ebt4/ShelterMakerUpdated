@@ -19,6 +19,22 @@ namespace ShelterMaker.Controllers
             _logger = logger;
         }
 
+        public static ContactInfoDto createContactDTO(ContactInfo info)
+        {
+            return new ContactInfoDto
+            {
+                Id = info.ContactInfoId,
+                Detail = info.Details,
+                Type = info.ContactMaintenance.Type,
+            };
+        }
+
+        bool IsWorkPassIncomplete(Patron p)
+        {
+            // Assuming a work pass is considered incomplete if it's needed but not confirmed
+            return p.WorkPass.Needed == true && p.WorkPass.Confirmed != true;
+        }
+
         [HttpPost]
         public async Task<ActionResult<Patron>> CreatePatron([FromBody] PatronCreateDto dto)
         {
@@ -88,6 +104,7 @@ namespace ShelterMaker.Controllers
                 .Where(p => p.PatronId == id)
                 .Select(p => new PatronDetailDto
                 {
+                    PatronId = p.PatronId,
                     FirstName = p.Person.FirstName,
                     LastName = p.Person.LastName,
                     Age = DateTime.Today.Year - p.Person.BirthDay.Value.Year, // Simplified age calculation
@@ -185,16 +202,146 @@ namespace ShelterMaker.Controllers
             return Ok(patron);
         }
 
-        public static ContactInfoDto createContactDTO(ContactInfo info)
+        
+
+        [HttpGet("by-facility/{facilityId}")]
+        public async Task<ActionResult<IEnumerable<PatronListDto>>> GetAllPatronsByFacilityAsync(int facilityId, [FromQuery] PatronQueryParameters queryParameters)
         {
-            return new ContactInfoDto
+            var query = _dbContext.Patrons.AsQueryable();
+
+            query = query.Where(p => p.FacilityId == facilityId);
+
+            if (queryParameters.CheckInStart.HasValue && queryParameters.CheckInEnd.HasValue)
             {
-                Id = info.ContactInfoId,
-                Detail = info.Details,
-                Type = info.ContactMaintenance.Type,
-            };
+                query = query.Where(p => p.LastCheckIn >= queryParameters.CheckInStart.Value && p.LastCheckIn <= queryParameters.CheckInEnd.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(queryParameters.Name))
+            {
+                query = query.Where(p => p.Person.FirstName.Contains(queryParameters.Name) || p.Person.LastName.Contains(queryParameters.Name));
+            }
+            if (queryParameters.RequireComplete.HasValue && queryParameters.RequireComplete.Value)
+            {
+                    query = query.Where(p => p.Intake.Initial.Locations != true ||
+                                             p.Intake.Initial.Medical != true ||
+                                             p.Intake.Initial.Covid != true ||
+                                             p.Intake.Initial.InitialAgreement != true ||
+                                             IsWorkPassIncomplete(p) || // Simplified WorkPass logic
+                                             p.Intake.Requirements.Completed != true ||
+                                             p.Intake.Requirements.Confirmed != true ||
+                                             p.Intake.SexualOffender.Completed != true ||
+                                             p.Intake.SexualOffender.IsOffender != true ||
+                                             p.Intake.TenRules.Completed != true ||
+                                             p.Intake.TenRules.Confirmed != true);
+            }
+            
+            try
+            {
+                var patrons = await query.Select(p => new PatronListDto
+                {
+                   
+                    PatronId = p.PatronId,
+                    FirstName = p.Person.FirstName,
+                    LastName = p.Person.LastName,
+                    LastCheckIn = p.LastCheckIn,
+                    Bed = p.Bed != null ? new BedNameDTO
+                    {
+                        Id = p.Bed.BedId,
+                        Name = p.Bed.Name,
+                    } : null,
+                    WorkPass = p.WorkPass != null ? new WorkPassDto
+                    {
+                        Id = p.WorkPass.WorkPassId,
+                        Needed = p.WorkPass.Needed,
+                        Confirmed = p.WorkPass.Confirmed,
+                    } : null,
+                    Initial = p.Intake.Initial != null ? new InitialCheckDto
+                    {
+                        Id = p.Intake.Initial.InitialId,
+                        complete = p.Intake.Initial.InitialAgreement == true
+                                   && p.Intake.Initial.Covid == true
+                                   && p.Intake.Initial.Locations == true
+                                   && p.Intake.Initial.Medical == true,
+                    } : null,
+                    Requirements = p.Intake.Requirements != null ? new RequirementsDto
+                    {
+                        Id = p.Intake.Requirements.RequirementsId,
+                        Completed = p.Intake.Requirements.Completed,
+                        Confirmed = p.Intake.Requirements.Confirmed,
+                    } : null,
+                    SexOffender = p.Intake.SexualOffender != null ? new SexualOffenderDto
+                    {
+                        Id = p.Intake.SexualOffender.SexualOffenderId,
+                        Complete = p.Intake.SexualOffender.Completed,
+                        isOffender = p.Intake.SexualOffender.IsOffender,
+                    } : null,
+                    TenRules = p.Intake.TenRules != null ? new TenRulesDto
+                    {
+                        Id = p.Intake.TenRulesId,
+                        Completed = p.Intake.TenRules.Completed,
+                        Confirmed = p.Intake.TenRules.Confirmed,
+                    } : null,
+
+                }).ToListAsync();
+
+                if (patrons.Any())
+                {
+                    return Ok(patrons);
+                }
+                else
+                {
+                    return NotFound("No matching patrons found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdatePatron(int id, [FromBody] PatronUpdateDto updateDto)
+        {
+            var patron = await _dbContext.Patrons.FindAsync(id);
+            if (patron == null)
+            {
+                return NotFound($"Patron with ID {id} not found.");
+            }
+
+            // Update the fields if they're provided in the DTO
+            if (updateDto.LastCheckIn.HasValue)
+            {
+                patron.LastCheckIn = updateDto.LastCheckIn.Value;
+            }
+
+            if (updateDto.IsActive.HasValue)
+            {
+                patron.IsActive = updateDto.IsActive.Value;
+            }
+
+            if (updateDto.BedId.HasValue)
+            {
+                // Additional check to ensure the Bed exists can be performed here
+                var bedExists = await _dbContext.Beds.AnyAsync(b => b.BedId == updateDto.BedId.Value);
+                if (!bedExists)
+                {
+                    return BadRequest($"Bed with ID {updateDto.BedId.Value} does not exist.");
+                }
+                patron.BedId = updateDto.BedId.Value;
+            }
+
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+                return NoContent(); // 204 No Content to indicate success without sending data back
+            }
+            catch (Exception ex)
+            {
+                // Log the exception if necessary
+                return StatusCode(500, "An error occurred while updating the patron.");
+            }
+        }
 
     }
 }

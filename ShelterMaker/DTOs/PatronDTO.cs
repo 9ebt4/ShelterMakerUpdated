@@ -13,6 +13,7 @@
 
     public class PatronDetailDto
     {
+        public int PatronId { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public int? Age { get; set; } // Assuming this is calculated
@@ -32,11 +33,36 @@
         public List<InfoReleaseDto>? InfoReleases { get; set; }
        
     }
+    public class PatronQueryParameters
+    {
+        public DateTime? CheckInStart { get; set; }
+        public DateTime? CheckInEnd { get; set; }
+        public string? Name { get; set; }
+        public bool? RequireComplete { get; set; }
+    }
 
-    
-    
+    public class PatronListDto
+    {
+        public int PatronId { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+        public DateTime? LastCheckIn { get; set; }
+        public BedNameDTO? Bed { get; set; }
+        public WorkPassDto? WorkPass { get; set; }
+        public InitialCheckDto? Initial { get; set; }
+        public RequirementsDto? Requirements { get; set; }
+        public SexualOffenderDto? SexOffender { get; set; }
+        public TenRulesDto? TenRules { get; set; }
+    }
 
-    
+    public class PatronUpdateDto
+    {
+        public DateTime? LastCheckIn { get; set; }
+        public bool? IsActive { get; set; }
+        public int? BedId { get; set; }
+    }
+
+
 
 
 }
