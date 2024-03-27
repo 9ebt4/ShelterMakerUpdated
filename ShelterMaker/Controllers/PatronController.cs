@@ -137,13 +137,13 @@ namespace ShelterMaker.Controllers
                     } : null,
                     SexOffender = p.Intake.SexualOffender != null ? new SexualOffenderDto
                     {
-                        Id = p.Intake.SexualOffender.SexualOffenderId,
-                        Complete= p.Intake.SexualOffender.Completed,
-                        isOffender = p.Intake.SexualOffender.IsOffender,
+                        SexualOffenderId = p.Intake.SexualOffender.SexualOffenderId,
+                        Completed = p.Intake.SexualOffender.Completed,
+                        IsOffender = p.Intake.SexualOffender.IsOffender,
                     }:null,
-                    TenRules = p.Intake.TenRules != null ? new TenRulesDto
+                    TenRules = p.Intake.TenRules != null ? new TenRuleDetailDto
                     {
-                        Id = p.Intake.TenRulesId,
+                        TenRulesId = p.Intake.TenRulesId,
                         Completed = p.Intake.TenRules.Completed,
                         Confirmed = p.Intake.TenRules.Confirmed,
                     }:null,
@@ -271,13 +271,13 @@ namespace ShelterMaker.Controllers
                     } : null,
                     SexOffender = p.Intake.SexualOffender != null ? new SexualOffenderDto
                     {
-                        Id = p.Intake.SexualOffender.SexualOffenderId,
-                        Complete = p.Intake.SexualOffender.Completed,
-                        isOffender = p.Intake.SexualOffender.IsOffender,
+                        SexualOffenderId = p.Intake.SexualOffender.SexualOffenderId,
+                        Completed = p.Intake.SexualOffender.Completed,
+                        IsOffender = p.Intake.SexualOffender.IsOffender,
                     } : null,
-                    TenRules = p.Intake.TenRules != null ? new TenRulesDto
+                    TenRules = p.Intake.TenRules != null ? new TenRuleDetailDto
                     {
-                        Id = p.Intake.TenRulesId,
+                        TenRulesId = p.Intake.TenRulesId,
                         Completed = p.Intake.TenRules.Completed,
                         Confirmed = p.Intake.TenRules.Confirmed,
                     } : null,

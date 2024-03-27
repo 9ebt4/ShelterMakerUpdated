@@ -24,7 +24,7 @@
         public InitialCheckDto? Initial { get; set; }
         public RequirementsDto? Requirements { get; set; }
         public SexualOffenderDto? SexOffender { get; set; }
-        public TenRulesDto? TenRules { get; set; }
+        public TenRuleDetailDto? TenRules { get; set; }
         public List<MedicalConditionDetailsDto>? MedicalConditions { get; set; }
         public List<BanDetailDto>? BanDetails { get; set; }
         public List<ContactInfoDto>? ContactInfos { get; set; }
@@ -52,7 +52,7 @@
         public InitialCheckDto? Initial { get; set; }
         public RequirementsDto? Requirements { get; set; }
         public SexualOffenderDto? SexOffender { get; set; }
-        public TenRulesDto? TenRules { get; set; }
+        public TenRuleDetailDto? TenRules { get; set; }
     }
 
     public class PatronUpdateDto
