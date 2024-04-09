@@ -20,6 +20,7 @@ namespace ShelterMaker.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Amenity>>> GetAllAmenitiesAsync()
         {
+           
             try
             {
                 var amenities = await _dbContext.Amenities.ToListAsync();
