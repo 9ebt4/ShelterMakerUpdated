@@ -13,7 +13,11 @@ public partial class GoogleUser
 
     public int? PersonId { get; set; }
 
+    public int? FacilityId { get; set; }
+
     public virtual ICollection<Associate> Associates { get; set; } = new List<Associate>();
+
+    public virtual Facility? Facility { get; set; }
 
     public virtual Person? Person { get; set; }
 }

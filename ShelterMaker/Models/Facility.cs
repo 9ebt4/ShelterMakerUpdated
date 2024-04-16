@@ -13,13 +13,13 @@ public partial class Facility
 
     public bool? IsActive { get; set; }
 
-    public virtual ICollection<Associate> Associates { get; set; } = new List<Associate>();
-
     public virtual ICollection<Bed> Beds { get; set; } = new List<Bed>();
 
     public virtual ICollection<Checklist> Checklists { get; set; } = new List<Checklist>();
 
     public virtual ICollection<ContactInfo> ContactInfos { get; set; } = new List<ContactInfo>();
+
+    public virtual ICollection<GoogleUser> GoogleUsers { get; set; } = new List<GoogleUser>();
 
     public virtual ICollection<Patron> Patrons { get; set; } = new List<Patron>();
 }

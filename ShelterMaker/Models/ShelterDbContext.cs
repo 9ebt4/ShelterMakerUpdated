@@ -95,7 +95,7 @@ public partial class ShelterDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=.\\SQLExpress;Database=ShelterDB;Trusted_Connection=True;Encrypt=False");
+        => optionsBuilder.UseSqlServer("Server=.\\SQLExpress;Database=shelterDB;Trusted_Connection=True;Encrypt=False");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -171,11 +171,6 @@ public partial class ShelterDbContext : DbContext
                 .HasForeignKey(d => d.AssociateMaintenanceId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Associate__assoc__52593CB8");
-
-            entity.HasOne(d => d.Facility).WithMany(p => p.Associates)
-                .HasForeignKey(d => d.FacilityId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Associate__facil__5165187F");
 
             entity.HasOne(d => d.GoogleUser).WithMany(p => p.Associates)
                 .HasForeignKey(d => d.GoogleUserId)
@@ -407,11 +402,16 @@ public partial class ShelterDbContext : DbContext
             entity.ToTable("GoogleUser");
 
             entity.Property(e => e.GoogleUserId).HasColumnName("googleUserID");
+            entity.Property(e => e.FacilityId).HasColumnName("facilityID");
             entity.Property(e => e.GoogleToken)
                 .HasMaxLength(4000)
                 .HasColumnName("googleToken");
             entity.Property(e => e.IsActive).HasColumnName("isActive");
             entity.Property(e => e.PersonId).HasColumnName("personId");
+
+            entity.HasOne(d => d.Facility).WithMany(p => p.GoogleUsers)
+                .HasForeignKey(d => d.FacilityId)
+                .HasConstraintName("FK_GoogleUser_Facility");
 
             entity.HasOne(d => d.Person).WithMany(p => p.GoogleUsers)
                 .HasForeignKey(d => d.PersonId)

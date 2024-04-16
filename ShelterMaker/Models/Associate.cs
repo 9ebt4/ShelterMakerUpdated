@@ -21,8 +21,6 @@ public partial class Associate
 
     public virtual ICollection<EmergencyContact> EmergencyContacts { get; set; } = new List<EmergencyContact>();
 
-    public virtual Facility Facility { get; set; } = null!;
-
     public virtual GoogleUser GoogleUser { get; set; } = null!;
 
     public virtual ICollection<Incident> Incidents { get; set; } = new List<Incident>();
