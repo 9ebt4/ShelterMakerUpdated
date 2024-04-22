@@ -100,46 +100,46 @@ namespace ShelterMaker.Controllers
             }
         }
 
-        [HttpGet("by-facility/{facilityId}")]
-        public async Task<ActionResult<IEnumerable<NoteDetailsDto>>> GetNotesByFacilityAsync(int facilityId, [FromQuery] DateTime? startDate = null, [FromQuery] DateTime? endDate = null)
-        {
-            var query = _dbContext.Notes.AsQueryable();
+        //[HttpGet("by-facility/{facilityId}")]
+        //public async Task<ActionResult<IEnumerable<NoteDetailsDto>>> GetNotesByFacilityAsync(int facilityId, [FromQuery] DateTime? startDate = null, [FromQuery] DateTime? endDate = null)
+        //{
+        //    var query = _dbContext.Notes.AsQueryable();
 
-            // Filter by notes linked to associates and patrons of the facility
-            query = query.Where(n => n.Associate.FacilityId == facilityId || n.PatronNotes.Any(pn => pn.Patron.FacilityId == facilityId));
+        //    // Filter by notes linked to associates and patrons of the facility
+        //    query = query.Where(n => n.Associate.FacilityId == facilityId || n.PatronNotes.Any(pn => pn.Patron.FacilityId == facilityId));
 
-            // Optional: filter by date range
-            if (startDate.HasValue)
-            {
-                query = query.Where(n => n.DateCreated >= startDate.Value);
-            }
+        //    // Optional: filter by date range
+        //    if (startDate.HasValue)
+        //    {
+        //        query = query.Where(n => n.DateCreated >= startDate.Value);
+        //    }
 
-            if (endDate.HasValue)
-            {
-                query = query.Where(n => n.DateCreated <= endDate.Value);
-            }
+        //    if (endDate.HasValue)
+        //    {
+        //        query = query.Where(n => n.DateCreated <= endDate.Value);
+        //    }
 
-            var notes = await query
-                .Select(n => new NoteDetailsDto
-                {
-                    NoteId = n.NoteId,
-                    AssociateId = n.AssociateId,
-                    AssociateName = n.Associate != null ? $"{n.Associate.GoogleUser.Person.FirstName} {n.Associate.GoogleUser.Person.LastName}" : "",
-                    Content = n.Content,
-                    DateCreated = n.DateCreated,
-                    NoteMaintenanceCategory = n.NoteMaintenance.Category,
-                    PatronIds = n.PatronNotes.Select(pn => pn.PatronId).ToList(),
-                    PatronNames = n.PatronNotes.Select(pn => $"{pn.Patron.Person.FirstName} {pn.Patron.Person.LastName}").ToList(),
-                })
-                .ToListAsync();
+        //    var notes = await query
+        //        .Select(n => new NoteDetailsDto
+        //        {
+        //            NoteId = n.NoteId,
+        //            AssociateId = n.AssociateId,
+        //            AssociateName = n.Associate != null ? $"{n.Associate.GoogleUser.Person.FirstName} {n.Associate.GoogleUser.Person.LastName}" : "",
+        //            Content = n.Content,
+        //            DateCreated = n.DateCreated,
+        //            NoteMaintenanceCategory = n.NoteMaintenance.Category,
+        //            PatronIds = n.PatronNotes.Select(pn => pn.PatronId).ToList(),
+        //            PatronNames = n.PatronNotes.Select(pn => $"{pn.Patron.Person.FirstName} {pn.Patron.Person.LastName}").ToList(),
+        //        })
+        //        .ToListAsync();
 
-            if (!notes.Any())
-            {
-                return NotFound("No notes found for the specified facility.");
-            }
+        //    if (!notes.Any())
+        //    {
+        //        return NotFound("No notes found for the specified facility.");
+        //    }
 
-            return Ok(notes);
-        }
+        //    return Ok(notes);
+        //}
 
         [HttpPut("{noteId}")]
         public async Task<IActionResult> UpdateNoteAsync(int noteId, [FromBody] UpdateNoteDto updateDto)

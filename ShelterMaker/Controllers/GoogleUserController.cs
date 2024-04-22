@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ShelterMaker.DTOs;
 using ShelterMaker.Models;
 
@@ -21,10 +22,16 @@ namespace ShelterMaker.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateGoogleUser([FromBody] GoogleUserCreateDto googleUserDto)
         {
+            
             using var transaction = await _dbContext.Database.BeginTransactionAsync();
 
             try
             {
+                var facilityId = _dbContext.Facilities.FirstOrDefault(f => f.FacilityCode == googleUserDto.FacilityPasscode);
+                if (facilityId == null)
+                {
+                    return NotFound($"The Facility with passcode {googleUserDto.FacilityPasscode} was not found");
+                }
                 // Create the Person
                 var person = new Person
                 {
@@ -48,8 +55,9 @@ namespace ShelterMaker.Controllers
                 var googleUser = new GoogleUser
                 {
                     GoogleToken = googleUserDto.GoogleToken,
-                    IsActive = false,
-                    PersonId = person.PersonId
+                    IsActive = true,
+                    PersonId = person.PersonId,
+                    FacilityId = facilityId.FacilityId
                 };
                 _dbContext.GoogleUsers.Add(googleUser);
                 await _dbContext.SaveChangesAsync();
@@ -83,6 +91,48 @@ namespace ShelterMaker.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"An error occurred while fetching GoogleUser with ID {id}.");
+                return StatusCode(500, "An internal server error occurred.");
+            }
+        }
+
+        [HttpGet("googleid/{GoogleToken}")]
+        public async Task<ActionResult<GoogleUserDetailDTO>> GetGoogleUserByGoogleToken(string GoogleToken)
+        {
+            try
+            {
+                var googleUser = await _dbContext.GoogleUsers
+                    .Where(gu => gu.GoogleToken == GoogleToken)
+                    .Include(gu=> gu.Facility)
+                    .Include(gu => gu.Associates)
+                    .Include(gu => gu.Person)
+                    .SingleOrDefaultAsync();
+                
+                    
+                    
+
+                if (googleUser == null)
+                {
+                    return NotFound($"GoogleUser with GoogleUserID {GoogleToken} not found.");
+                }
+
+                var firstAssociate = googleUser.Associates.FirstOrDefault(a => a.GoogleUserId == googleUser.GoogleUserId);
+                
+                var detailDTO = new GoogleUserDetailDTO
+                {
+                    googleId = googleUser.GoogleUserId,
+                    googleToken = googleUser.GoogleToken,
+                    facilityId = googleUser.FacilityId,
+                    facilityIsActive = googleUser.Facility.IsActive,
+                    associateId = firstAssociate?.AssociateId,
+                    associateIsActive = firstAssociate?.IsActive,
+                    firstName= googleUser.Person.FirstName,
+                    lastName= googleUser.Person.LastName,
+                };
+                return Ok(detailDTO);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while fetching GoogleUser with ID {GoogleToken}.");
                 return StatusCode(500, "An internal server error occurred.");
             }
         }

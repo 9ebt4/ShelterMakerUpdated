@@ -12,6 +12,19 @@ builder.Host.UseSerilog((context, services, configuration) => configuration
     .ReadFrom.Configuration(context.Configuration)
     .ReadFrom.Services(services)
     .Enrich.FromLogContext());
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        policy =>
+        {
+            //replace localhost with yours
+            //also add your deployed website
+            policy.WithOrigins("http://localhost:4200",
+                                "https://MyChatRoom.com").AllowAnyMethod().AllowAnyHeader();
+        });
+});
+
+
 
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
@@ -40,5 +53,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.UseCors();
 app.Run();

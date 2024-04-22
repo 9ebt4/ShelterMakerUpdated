@@ -39,32 +39,32 @@ namespace ShelterMaker.Controllers
                 return StatusCode(500, "An error occurred while processing your request.");
             }
         }
-        [HttpGet("by-facility/{facilityId}")]
-        public async Task<ActionResult<IEnumerable<Associate>>> GetAssociatesByFacilityIdAsync(int facilityId)
-        {
-            try
-            {
-                var associates = await _dbContext.Associates
-                    .Where(a => a.FacilityId == facilityId)
-                    .Include(a => a.AssociateMaintenance) // Consider including related entities as needed
-                    .Include(a => a.GoogleUser)
-                    .ThenInclude(a => a.Person)// Include other entities as necessary
-                    .ToListAsync();
+        //[HttpGet("by-facility/{facilityId}")]
+        //public async Task<ActionResult<IEnumerable<Associate>>> GetAssociatesByFacilityIdAsync(int facilityId)
+        //{
+        //    try
+        //    {
+        //        var associates = await _dbContext.Associates
+        //            .Where(a => a.FacilityId == facilityId)
+        //            .Include(a => a.AssociateMaintenance) // Consider including related entities as needed
+        //            .Include(a => a.GoogleUser)
+        //            .ThenInclude(a => a.Person)// Include other entities as necessary
+        //            .ToListAsync();
 
-                if (!associates.Any())
-                {
-                    _logger.LogInformation($"No associates found for Facility ID {facilityId}.");
-                    return NotFound($"No associates found for Facility ID {facilityId}.");
-                }
+        //        if (!associates.Any())
+        //        {
+        //            _logger.LogInformation($"No associates found for Facility ID {facilityId}.");
+        //            return NotFound($"No associates found for Facility ID {facilityId}.");
+        //        }
 
-                return Ok(associates);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"An error occurred while fetching associates for Facility ID {facilityId}.");
-                return StatusCode(500, "An error occurred while processing your request.");
-            }
-        }
+        //        return Ok(associates);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, $"An error occurred while fetching associates for Facility ID {facilityId}.");
+        //        return StatusCode(500, "An error occurred while processing your request.");
+        //    }
+        //}
         [HttpGet("{id}")]
         public async Task<ActionResult<Associate>> GetAssociateByIdAsync(int id)
         {
@@ -93,7 +93,6 @@ namespace ShelterMaker.Controllers
             var newAssociate = new Associate
             {
                 IsActive = true,
-                FacilityId = associateDto.FacilityId,
                 AssociateMaintenanceId = associateDto.AssociateMaintenanceId,
                 GoogleUserId = associateDto.GoogleUserId,
                 // Map other properties as necessary
@@ -104,8 +103,7 @@ namespace ShelterMaker.Controllers
             {
                 await _dbContext.SaveChangesAsync();
 
-                // Optionally include related entities in the response
-                // by explicitly loading them here, if needed.
+                
 
                 return CreatedAtAction(nameof(GetAssociateByIdAsync), new { id = newAssociate.AssociateId }, newAssociate);
             }

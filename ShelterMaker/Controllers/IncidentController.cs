@@ -105,71 +105,71 @@ namespace ShelterMaker.Controllers
 
         }
 
-        [HttpGet("by-facility/{facilityId}")]
-        public async Task<ActionResult<IEnumerable<IncidentDetailDto>>> GetIncidentsByFacilityAsync(int facilityId, [FromQuery] DateTime? dateMin, [FromQuery] DateTime? dateMax, [FromQuery] bool? emergencyServices, [FromQuery] int? incidentMaintenanceId)
-        {
-            try
-            {
-                var query = _dbContext.Incidents.AsQueryable();
+        //[HttpGet("by-facility/{facilityId}")]
+        //public async Task<ActionResult<IEnumerable<IncidentDetailDto>>> GetIncidentsByFacilityAsync(int facilityId, [FromQuery] DateTime? dateMin, [FromQuery] DateTime? dateMax, [FromQuery] bool? emergencyServices, [FromQuery] int? incidentMaintenanceId)
+        //{
+        //    try
+        //    {
+        //        var query = _dbContext.Incidents.AsQueryable();
                 
-                query = query.Where(i => (i.Associate != null && i.Associate.FacilityId == facilityId) ||
-                                 (i.PatronIncidents.Any(pi => pi.Patron.FacilityId == facilityId)));
+        //        query = query.Where(i => (i.Associate != null && i.Associate.FacilityId == facilityId) ||
+        //                         (i.PatronIncidents.Any(pi => pi.Patron.FacilityId == facilityId)));
                  
-                if (dateMin.HasValue)
-                {
-                    query = query.Where(i => i.IncidentDate >= dateMin.Value);
-                }
-                if (dateMax.HasValue)
-                {
-                    query = query.Where(i => i.IncidentDate <= dateMax.Value);
-                }
-                if (emergencyServices.HasValue)
-                {
-                    query = query.Where(i => i.EmergencyServices == emergencyServices.Value);
-                }
+        //        if (dateMin.HasValue)
+        //        {
+        //            query = query.Where(i => i.IncidentDate >= dateMin.Value);
+        //        }
+        //        if (dateMax.HasValue)
+        //        {
+        //            query = query.Where(i => i.IncidentDate <= dateMax.Value);
+        //        }
+        //        if (emergencyServices.HasValue)
+        //        {
+        //            query = query.Where(i => i.EmergencyServices == emergencyServices.Value);
+        //        }
 
-                if (incidentMaintenanceId.HasValue)
-                {
-                    query = query.Where(i => i.IncidentMaintenanceId == incidentMaintenanceId.Value);
-                }
+        //        if (incidentMaintenanceId.HasValue)
+        //        {
+        //            query = query.Where(i => i.IncidentMaintenanceId == incidentMaintenanceId.Value);
+        //        }
 
-                var incidents =await query.Select(i => new IncidentDetailDto
-                {
-                    IncidentId = i.IncidentId,
-                    DateCreated = i.DateCreated,
-                    Content = i.Content,
-                    IncidentDate = i.IncidentDate,
-                    ActionTaken = i.ActionTaken,
-                    EmergencyServices = i.EmergencyServices,
-                    AssociateDetails = new AssociateDetailDto
-                    {
-                        AssociateId = i.Associate.AssociateId, // Assuming Associate is always present. If not, further null checks are required.
-                        FirstName = i.Associate.GoogleUser.Person.FirstName, // Ensuring the navigation properties are correctly chained.
-                        LastName = i.Associate.GoogleUser.Person.LastName
-                    },
-                    PatronDetails = i.PatronIncidents.Select(pi => new PatronNameDetailDto
-                    {
-                        PatronId = pi.PatronId.Value, // Ensuring that PatronId is unwrapped safely.
-                        FirstName = pi.Patron.Person.FirstName, // Assuming that each Patron has a Person. Null checks may be needed.
-                        LastName = pi.Patron.Person.LastName
-                    }).ToList(),
-                    IncidentCategory = i.IncidentMaintenance.Category // Assuming Category is not null.
-                })
-                    .ToListAsync();
+        //        var incidents =await query.Select(i => new IncidentDetailDto
+        //        {
+        //            IncidentId = i.IncidentId,
+        //            DateCreated = i.DateCreated,
+        //            Content = i.Content,
+        //            IncidentDate = i.IncidentDate,
+        //            ActionTaken = i.ActionTaken,
+        //            EmergencyServices = i.EmergencyServices,
+        //            AssociateDetails = new AssociateDetailDto
+        //            {
+        //                AssociateId = i.Associate.AssociateId, // Assuming Associate is always present. If not, further null checks are required.
+        //                FirstName = i.Associate.GoogleUser.Person.FirstName, // Ensuring the navigation properties are correctly chained.
+        //                LastName = i.Associate.GoogleUser.Person.LastName
+        //            },
+        //            PatronDetails = i.PatronIncidents.Select(pi => new PatronNameDetailDto
+        //            {
+        //                PatronId = pi.PatronId.Value, // Ensuring that PatronId is unwrapped safely.
+        //                FirstName = pi.Patron.Person.FirstName, // Assuming that each Patron has a Person. Null checks may be needed.
+        //                LastName = pi.Patron.Person.LastName
+        //            }).ToList(),
+        //            IncidentCategory = i.IncidentMaintenance.Category // Assuming Category is not null.
+        //        })
+        //            .ToListAsync();
 
-                if (!incidents.Any())
-                {
-                    return NotFound($"No incidents found for facility with ID {facilityId}.");
-                }
+        //        if (!incidents.Any())
+        //        {
+        //            return NotFound($"No incidents found for facility with ID {facilityId}.");
+        //        }
 
-                return Ok(incidents);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"An error occurred while fetching incidents for facility with ID {facilityId}.");
-                return StatusCode(500, "An error occurred while processing your request.");
-            }
-        }
+        //        return Ok(incidents);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, $"An error occurred while fetching incidents for facility with ID {facilityId}.");
+        //        return StatusCode(500, "An error occurred while processing your request.");
+        //    }
+        //}
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateIncidentAsync(int id, [FromBody] IncidentUpdateDto updateDto)

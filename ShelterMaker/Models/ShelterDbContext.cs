@@ -164,7 +164,6 @@ public partial class ShelterDbContext : DbContext
 
             entity.Property(e => e.AssociateId).HasColumnName("associateID");
             entity.Property(e => e.AssociateMaintenanceId).HasColumnName("associateMaintenanceID");
-            entity.Property(e => e.FacilityId).HasColumnName("facilityID");
             entity.Property(e => e.IsActive).HasColumnName("isActive");
 
             entity.HasOne(d => d.AssociateMaintenance).WithMany(p => p.Associates)

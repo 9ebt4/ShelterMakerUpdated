@@ -2,7 +2,6 @@
 {
     public class AssociateCreateDto
     {
-        public int FacilityId { get; set; }
         public int AssociateMaintenanceId { get; set; }
         public int GoogleUserId { get; set; }
 
